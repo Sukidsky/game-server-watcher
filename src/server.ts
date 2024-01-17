@@ -107,6 +107,7 @@ createServer(async (req, res) => {
                         gamedig: String(gamedigVersion),
                         steam: Boolean(process.env.STEAM_WEB_API_KEY),
                         discord: Boolean(process.env.DISCORD_BOT_TOKEN),
+                        kook: Boolean(process.env.KOOK_BOT_TOKEN),
                         telegram: Boolean(process.env.TELEGRAM_BOT_TOKEN),
                         slack: Boolean(process.env.SLACK_BOT_TOKEN && process.env.SLACK_APP_TOKEN)
                     };

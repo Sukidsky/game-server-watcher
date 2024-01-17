@@ -2,11 +2,13 @@ import { Type } from 'gamedig';
 import { Low, JSONFile } from '@commonify/lowdb';
 import { GameServer, initDb, saveDb } from './game-server';
 import * as discordBot from './discord-bot';
+import * as kookBot from './kook-bot';
 import * as telegramBot from './telegram-bot';
 import * as slackBot from './slack-bot';
 
 const REFRESH_TIME_MINUTES = parseInt(process.env.REFRESH_TIME_MINUTES || '2', 10);
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || '';
+const KOOK_BOT_TOKEN = process.env.KOOK_BOT_TOKEN || '';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || '';
 const SLACK_APP_TOKEN = process.env.SLACK_APP_TOKEN || '';
@@ -14,6 +16,14 @@ const DATA_PATH = process.env.DATA_PATH || './data/';
 const DBG = Boolean(Number(process.env.DBG));
 
 export interface DiscordConfig {
+    channelId: string;
+    showPlayersList?: boolean;
+    onlineColor?: string;
+    offlineColor?: string;
+    showGraph?: boolean;
+}
+
+export interface KookConfig {
     channelId: string;
     showPlayersList?: boolean;
     onlineColor?: string;
@@ -40,6 +50,7 @@ export interface GameServerConfig {
     graphHistoryHours?: number;//12
     timezoneOffset?: number;//0
     discord?: DiscordConfig[];
+    kook?: KookConfig[];
     telegram?: TelegramConfig[];
     slack?: SlackConfig[];
 
@@ -53,6 +64,8 @@ export interface GameServerConfig {
     requestRulesRequired?: boolean;
     requestPlayersRequired?: boolean;
     // Discord
+    guildId?: string;
+    // Kook
     guildId?: string;
     // Nadeo
     login?: string;
@@ -87,6 +100,7 @@ class Watcher {
         console.log('watcher starting...');
 
         if (DISCORD_BOT_TOKEN) await discordBot.init(DISCORD_BOT_TOKEN);
+        if (KOOK_BOT_TOKEN) await discordBot.init(KOOK_BOT_TOKEN);
         if (TELEGRAM_BOT_TOKEN) await telegramBot.init(TELEGRAM_BOT_TOKEN);
         if (SLACK_BOT_TOKEN && SLACK_APP_TOKEN) await slackBot.init(SLACK_BOT_TOKEN, SLACK_APP_TOKEN);
 
@@ -105,6 +119,7 @@ class Watcher {
         for (const gs of this.servers) {
             promises.push(gs.update().then(async () => {
                 if (DISCORD_BOT_TOKEN) await discordBot.serverUpdate(gs);
+                if (KOOK_BOT_TOKEN) await kookBot.serverUpdate(gs);
                 if (TELEGRAM_BOT_TOKEN) await telegramBot.serverUpdate(gs);
                 if (SLACK_BOT_TOKEN && SLACK_APP_TOKEN) await slackBot.serverUpdate(gs);
             }));

@@ -1,39 +1,39 @@
-import { Client, GatewayIntentBits, TextChannel, Message, EmbedBuilder, APIEmbedField, HexColorString } from 'discord.js';
+import { Client, GatewayIntentBits, TextChannel, Message, EmbedBuilder, APIEmbedField, HexColorString } from 'kook.js';
 import { Low, JSONFile } from '@commonify/lowdb';
 import { GameServer } from './game-server';
 import hhmmss from './lib/hhmmss';
-import { DiscordConfig } from './watcher';
+import { KookConfig } from './watcher';
 
 const DATA_PATH = process.env.DATA_PATH || './data/';
 const DBG = Boolean(Number(process.env.DBG));
 
-interface DiscordData {
+interface KookData {
     channelId: string;
     host: string;
     port: number;
     messageId: string;
 }
 
-const adapter = new JSONFile<DiscordData[]>(DATA_PATH + 'discord.json');
-const db = new Low<DiscordData[]>(adapter);
+const adapter = new JSONFile<KookData[]>(DATA_PATH + 'kook.json');
+const db = new Low<KookData[]>(adapter);
 
 const serverInfoMessages: ServerInfoMessage[] = [];
 
 let bot: Client;
 export async function init(token: string) {
     if (!bot) {
-        console.log('discord-bot starting...');
+        console.log('kook-bot starting...');
         bot = new Client({
             intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
         });
 
         bot.on('error', e => {
-            console.error('discord-bot ERROR', e.message || e);
+            console.error('kook-bot ERROR', e.message || e);
         });
 
         await new Promise<void>((resolve, reject) => {
             bot.once('ready', () => {
-                console.log('discord-bot ready', bot.user);
+                console.log('kook-bot ready', bot.user);
 
                 bot.removeListener('error', reject);
                 resolve();
@@ -59,15 +59,15 @@ export async function init(token: string) {
 }
 
 export async function serverUpdate(gs: GameServer) {
-    if (DBG) console.log('discord.serverUpdate', gs.config.host, gs.config.port, gs.config.discord);
+    if (DBG) console.log('kook.serverUpdate', gs.config.host, gs.config.port, gs.config.kook);
 
-    if (gs.config.discord) {
-        for (const conf of gs.config.discord) {
+    if (gs.config.kook) {
+        for (const conf of gs.config.kook) {
             try {
                 let m = await getServerInfoMessage(conf.channelId, gs.config.host, gs.config.port);
                 await m.updatePost(gs, conf);
             } catch (e: any) {
-                console.error(['discord-bot.sup', conf.channelId, gs.config.host, gs.config.port].join(':'), e.message || e);
+                console.error(['kook-bot.sup', conf.channelId, gs.config.host, gs.config.port].join(':'), e.message || e);
             }
         }
     }
@@ -119,7 +119,7 @@ class ServerInfoMessage {
             try {
                 this.message = await this.channel.messages.fetch({ message: msgId });
             } catch (e: any) {
-                console.error(['discord.init.msg', this.channelId, this.host, this.port].join(':'), e.message || e);
+                console.error(['kook.init.msg', this.channelId, this.host, this.port].join(':'), e.message || e);
             }
         }
 
@@ -149,12 +149,12 @@ class ServerInfoMessage {
             try {
                 await db.write();
             } catch (e: any) {
-                console.error(['discord.init.db', this.channelId, this.host, this.port].join(':'), e.message || e);
+                console.error(['kook.init.db', this.channelId, this.host, this.port].join(':'), e.message || e);
             }
         }
     }
 
-    async updatePost(gs: GameServer, conf: DiscordConfig) {
+    async updatePost(gs: GameServer, conf: KookConfig) {
         if (!this.message) return;
 
         const embed = new EmbedBuilder();
@@ -219,7 +219,7 @@ class ServerInfoMessage {
         try {
             await this.message.edit({ embeds: [embed] });
         } catch (e: any) {
-            console.error(['discord.up', this.channelId, this.host, this.port].join(':'), e.message || e);
+            console.error(['kook.up', this.channelId, this.host, this.port].join(':'), e.message || e);
         }
     }
 }

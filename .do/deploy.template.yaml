@@ -4,7 +4,7 @@ spec:
   - name: web
     git:
       branch: master
-      repo_clone_url: https://github.com/a-sync/game-server-watcher.git
+      repo_clone_url: https://github.com/Sukidsky/game-server-watcher.git
     envs:
     - key: SECRET
       scope: RUN_TIME
@@ -12,6 +12,9 @@ spec:
       scope: RUN_TIME
       value: "2"
     - key: DISCORD_BOT_TOKEN
+      scope: RUN_TIME
+      value: ""
+    - key: KOOK_BOT_TOKEN
       scope: RUN_TIME
       value: ""
     - key: TELEGRAM_BOT_TOKEN

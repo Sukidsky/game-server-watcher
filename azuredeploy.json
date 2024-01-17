@@ -38,6 +38,13 @@
                 "description": "Discord bot token"
             }
         },
+        "kookBotToken": {
+            "type": "string",
+            "defaultValue": "-",
+            "metadata": {
+                "description": "Kook bot token"
+            }
+        },
         "telegramBotToken": {
             "type": "string",
             "defaultValue": "-",
@@ -68,7 +75,7 @@
         },
         "repoUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/a-sync/game-server-watcher.git",
+            "defaultValue": "https://github.com/Sukidsky/game-server-watcher.git",
             "metadata": {
                 "description": "Source repo URL."
             }

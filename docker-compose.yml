@@ -12,6 +12,7 @@ services:
             - DATA_PATH=/data/
             - SECRET=secret
             - DISCORD_BOT_TOKEN=
+            - KOOK_BOT_TOKEN=
             - TELEGRAM_BOT_TOKEN=
             - SLACK_BOT_TOKEN=
             - SLACK_APP_TOKEN=

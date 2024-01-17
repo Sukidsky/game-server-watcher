@@ -107,6 +107,54 @@
                 "grid_columns": 12
             }
         },
+        "kook": {
+            "type": "array",
+            "title": "Kook channels",
+            "description": "The simplest way to get a kook channel ID is to enable developer mode in settings, then right clicking on the channel name will give you the <b>Copy ID</b> option.",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "title": "Channel",
+                "required": [
+                    "channelId"
+                ],
+                "properties": {
+                    "channelId": {
+                        "title": "Channel ID",
+                        "type": "string"
+                    },
+                    "showPlayersList": {
+                        "title": "Show players list",
+                        "default": true,
+                        "type": "boolean",
+                        "format": "checkbox"
+                    },
+                    "showGraph": {
+                        "title": "Show graph",
+                        "default": true,
+                        "type": "boolean",
+                        "format": "checkbox"
+                    },
+                    "onlineColor": {
+                        "title": "Online color",
+                        "default": "#000000",
+                        "type": "string",
+                        "format": "color"
+                    },
+                    "offlineColor": {
+                        "title": "Offline color",
+                        "default": "#ff0000",
+                        "type": "string",
+                        "format": "color"
+                    }
+                }
+            },
+            "format": "table",
+            "options": {
+                "grid_columns": 12
+            }
+        },
         "telegram": {
             "type": "array",
             "title": "Telegram chats",

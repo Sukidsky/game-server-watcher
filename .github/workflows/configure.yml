@@ -9,6 +9,9 @@ on:
       discord_bot_token:
         description: 'Discord bot token'
         type: string
+      kook_bot_token:
+        description: 'Kook bot token'
+        type: string
       telegram_bot_token:
         description: 'Telegram bot token'
         type: string
@@ -35,18 +38,21 @@ jobs:
         run: |
           INP_SECRET=$(jq -r '.inputs.secret' $GITHUB_EVENT_PATH)
           INP_DISCORD_BOT_TOKEN=$(jq -r '.inputs.discord_bot_token' $GITHUB_EVENT_PATH)
+          INP_KOOK_BOT_TOKEN=$(jq -r '.inputs.kook_bot_token' $GITHUB_EVENT_PATH)
           INP_TELEGRAM_BOT_TOKEN=$(jq -r '.inputs.telegram_bot_token' $GITHUB_EVENT_PATH)
           INP_SLACK_BOT_TOKEN=$(jq -r '.inputs.slack_bot_token' $GITHUB_EVENT_PATH)
           INP_SLACK_APP_TOKEN=$(jq -r '.inputs.slack_app_token' $GITHUB_EVENT_PATH)
           INP_STEAM_WEB_API_KEY=$(jq -r '.inputs.steam_web_api_key' $GITHUB_EVENT_PATH)
           echo ::add-mask::$INP_SECRET
           echo ::add-mask::$INP_DISCORD_BOT_TOKEN
+          echo ::add-mask::$INP_KOOK_BOT_TOKEN
           echo ::add-mask::$INP_TELEGRAM_BOT_TOKEN
           echo ::add-mask::$INP_SLACK_BOT_TOKEN
           echo ::add-mask::$INP_SLACK_APP_TOKEN
           echo ::add-mask::$INP_STEAM_WEB_API_KEY
           echo secret=$INP_SECRET >> $GITHUB_OUTPUT
           echo discord_bot_token=$INP_DISCORD_BOT_TOKEN >> $GITHUB_OUTPUT
+          echo kook_bot_token=$INP_KOOK_BOT_TOKEN >> $GITHUB_OUTPUT
           echo telegram_bot_token=$INP_TELEGRAM_BOT_TOKEN >> $GITHUB_OUTPUT
           echo slack_bot_token=$INP_SLACK_BOT_TOKEN >> $GITHUB_OUTPUT
           echo slack_app_token=$INP_SLACK_APP_TOKEN >> $GITHUB_OUTPUT
@@ -63,6 +69,11 @@ jobs:
         run: echo SET_ARGS='${{ env.SET_ARGS }} DISCORD_BOT_TOKEN="${{ steps.masked_inputs.outputs.discord_bot_token }}"' >> $GITHUB_ENV
       - if: inputs.discord_bot_token == '-'
         run: echo UNSET_ARGS='${{ env.UNSET_ARGS }} DISCORD_BOT_TOKEN' >> $GITHUB_ENV
+
+      - if: inputs.kook_bot_token != '' && inputs.kook_bot_token != '-'
+        run: echo SET_ARGS='${{ env.SET_ARGS }} KOOK_BOT_TOKEN="${{ steps.masked_inputs.outputs.kook_bot_token }}"' >> $GITHUB_ENV
+      - if: inputs.kook_bot_token == '-'
+        run: echo UNSET_ARGS='${{ env.UNSET_ARGS }} KOOK_BOT_TOKEN' >> $GITHUB_ENV
 
       - if: inputs.telegram_bot_token != '' && inputs.telegram_bot_token != '-'
         run: echo SET_ARGS='${{ env.SET_ARGS }} TELEGRAM_BOT_TOKEN="${{ steps.masked_inputs.outputs.telegram_bot_token }}"' >> $GITHUB_ENV
